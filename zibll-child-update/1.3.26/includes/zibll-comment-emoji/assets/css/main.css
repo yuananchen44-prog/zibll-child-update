@@ -1,0 +1,116 @@
+.dropup.relative.smilie.zibll-demo-ready .dropdown-smilie {
+    max-height: 220px;
+}
+
+.dropup.relative.smilie.zibll-demo-ready .zibll-demo-tabs {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center;
+    gap: 6px;
+    width: auto;
+    max-width: none;
+    margin-top: 8px;
+    padding: 0 0 6px;
+    box-sizing: border-box;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+    scroll-behavior: smooth;
+    white-space: nowrap !important;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(130, 130, 130, 0.45) transparent;
+}
+
+.dropup.relative.smilie.zibll-demo-ready .zibll-demo-tabs > * {
+    flex: 0 0 auto !important;
+}
+
+.dropup.relative.smilie.zibll-demo-ready .zibll-demo-tab {
+    display: inline-flex !important;
+    flex: 0 0 auto !important;
+    align-items: center;
+    justify-content: center;
+    float: none !important;
+    width: auto !important;
+    min-width: max-content !important;
+    max-width: none !important;
+    white-space: nowrap !important;
+    margin: 0 !important;
+    padding: 2px 10px !important;
+    line-height: 1.8;
+}
+
+.dropup.relative.smilie.zibll-demo-ready .zibll-demo-tabs::-webkit-scrollbar {
+    height: 6px;
+}
+
+.dropup.relative.smilie.zibll-demo-ready .zibll-demo-tabs::-webkit-scrollbar-thumb {
+    background: rgba(130, 130, 130, 0.45);
+    border-radius: 999px;
+}
+
+.dropup.relative.smilie.zibll-demo-ready .zibll-demo-tab.active {
+    color: #fff;
+    background: #1b91ff;
+}
+
+.zce-rich-wrap {
+    position: relative;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.zce-rich-editor {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 92px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+    cursor: text;
+    border: 1px solid var(--main-border-color, #d9d9d9);
+    border-radius: 4px;
+    background: var(--main-bg-color, #fff);
+    color: var(--main-color, #333);
+    padding: 8px 10px;
+}
+
+.zce-rich-editor:focus {
+    outline: none;
+}
+
+.zce-rich-editor:empty::before {
+    content: attr(data-placeholder);
+    color: var(--muted-3-color, #999);
+    pointer-events: none;
+}
+
+textarea.grin.zce-source-textarea {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    clip: rect(0 0 0 0) !important;
+    clip-path: inset(50%) !important;
+}
+
+.zce-inline-emoji {
+    width: 1.45em;
+    height: 1.45em;
+    object-fit: contain;
+    vertical-align: -0.28em;
+}
+
+.chat-lists .msg-list .zce-private-preview-emoji {
+    display: inline-block;
+    width: 18px !important;
+    height: 18px;
+    margin: 0 2px;
+    object-fit: contain;
+    vertical-align: -4px;
+}

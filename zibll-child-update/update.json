@@ -1,0 +1,214 @@
+{
+  "version": "1.3.26",
+  "requires_wp": "5.0",
+  "requires_php": "7.0",
+  "homepage": "",
+  "changelog": "v1.3.26 新增「卸载数据清理」：切换离开（或删除）本子主题时，可选择保留或清除其整合插件的全部自有数据。\n- 背景：WordPress 不允许直接删除启用中的主题，须先切换；而删除非启用主题时其代码不加载、自身钩子不触发。故利用「切换那一刻本子主题仍是启用态、PHP 仍在运行」的窗口，在 switch_theme 钩子里可靠执行清理。\n- 交互：后台「外观→主题」点其它主题的「启用」时，由 assets/js/theme-switch-cleanup.js 弹窗询问「保留/清除整合插件数据」，选清除则经 cookie 标记、在切换同时删除数据。\n- 清理严格限定为本子主题整合插件的自有数据：11 个 option（评分/夏稚前缀/评论表情/zibll_child_*/已废弃媒体云孤儿）、夏稚前缀+评分 postmeta、zrp_user_rating_% usermeta、评论表情 uploads 目录；绝不触碰父主题 zibll 与其它插件。\n- 注：评分插件写过一个无前缀的 'score' 文章元因过于通用未批量删，避免误伤；自定义器(Customizer)内启用主题属边缘路径，弹窗不覆盖，可再次经主题列表切换触发。\nv1.3.25 正式启用「同步删除」自动清理：1.3.23 新增的孤儿文件清理能力因守卫逻辑缺陷（1.3.24 已修正）此前未在任何站点实际触发；本版本通过一次正常版本递增更新，使已修复代码在下一次更新时真正执行——更新完成后自动删除主题目录内、但不在最新版清单中的孤儿文件（例如 1.3.22 移除的 includes/hoarfall-media-offload/ 整套残留及旧版 loader），使站点文件树与最新版完全对齐。\nv1.3.24 修复：同步删除「安全护栏」写反导致老站点不生效。原守卫用「孤儿数 <= 清单文件数」判定清单是否损坏，但老站点文件本就多于精简后的新清单，被误判为清单损坏而放弃删除，使清理从未触发（例如 135 文件的旧站对 39 文件的新清单）。\n- 修正：改为校验「清单自身合法」——要求清单含核心文件(includes/index.php、includes/functions/theme-updater.php)且文件数 >= 15 才执行删除，彻底解除对老站点的误拦。其余护栏(零错误后执行 / 仅 ALLOWED 扩展名 / 跳过受保护文件与排除目录 / realpath 主题目录内校验 / 不删目录)不变。\n",
+  "files": [
+    {
+      "path": "assets/js/theme-switch-cleanup.js",
+      "url": "1.3.26/assets/js/theme-switch-cleanup.js",
+      "hash": "b29418af8e0ce5eb54c0878e93859e09860c0882b5cc1c0de4f4e026b398318c"
+    },
+    {
+      "path": "functions.php",
+      "url": "1.3.26/functions.php",
+      "hash": "c000c2a0cf09aea2fb74a7279a4b2a4b1d9acf55bea9049bcda0ecbbe18958ca"
+    },
+    {
+      "path": "includes/functions/functions.php",
+      "url": "1.3.26/includes/functions/functions.php",
+      "hash": "394bccdee3d7143b932ece14934216b62b84991516be18dd5a8a26d0465a5c74"
+    },
+    {
+      "path": "includes/functions/modules-switch.php",
+      "url": "1.3.26/includes/functions/modules-switch.php",
+      "hash": "9830fa834b47ac9093b93d2a48b854bb94e5b2381fe58bc1be241e83c11cb898"
+    },
+    {
+      "path": "includes/functions/theme-options.php",
+      "url": "1.3.26/includes/functions/theme-options.php",
+      "hash": "981f662f0972e8b91c1b31403964d80d0f7237e5c858b63185102f548d33a07c"
+    },
+    {
+      "path": "includes/functions/theme-uninstall.php",
+      "url": "1.3.26/includes/functions/theme-uninstall.php",
+      "hash": "03fb74801b03bbb09be69596086f245450814879eecb6b5a750f5c6108d18509"
+    },
+    {
+      "path": "includes/functions/theme-updater.php",
+      "url": "1.3.26/includes/functions/theme-updater.php",
+      "hash": "49beb7369b103466734b0498511fd8e2e30fa017d7d144038607ed1fac87a296"
+    },
+    {
+      "path": "includes/index.php",
+      "url": "1.3.26/includes/index.php",
+      "hash": "dc551586011fe1dbd99eece4bb4fb691b31a264aa41de4a69be38363bb487b98"
+    },
+    {
+      "path": "includes/rating-plugin-loader.php",
+      "url": "1.3.26/includes/rating-plugin-loader.php",
+      "hash": "d8bbe3ea9d58013282e1621be3b57bf3f0d8f861db11dc9b109fd0012a040fd2"
+    },
+    {
+      "path": "includes/rating-plugin/assets/css/rating.css",
+      "url": "1.3.26/includes/rating-plugin/assets/css/rating.css",
+      "hash": "5c05a01fa967309bcc60797541837c424f3c32d34e4811f6b9384faefb8e5056"
+    },
+    {
+      "path": "includes/rating-plugin/assets/js/rating.js",
+      "url": "1.3.26/includes/rating-plugin/assets/js/rating.js",
+      "hash": "5657d6399f46c39b13d18a7d8df0a203226af33c2fcd90a331704987431bd979"
+    },
+    {
+      "path": "includes/rating-plugin/inc/ajax.php",
+      "url": "1.3.26/includes/rating-plugin/inc/ajax.php",
+      "hash": "16298a1a32bbcd1c78bfbe1a242de0746dc812241ac8b3d0c6e115b23c25bc61"
+    },
+    {
+      "path": "includes/rating-plugin/inc/functions.php",
+      "url": "1.3.26/includes/rating-plugin/inc/functions.php",
+      "hash": "4851b1ba4be34d32f4f4632546587651cda90244ef8f59252a539d371b14f983"
+    },
+    {
+      "path": "includes/rating-plugin/inc/hooks.php",
+      "url": "1.3.26/includes/rating-plugin/inc/hooks.php",
+      "hash": "d62d19ad4031db3840087be8ae456f69528c383f54fb92eb88eb349e5814f55b"
+    },
+    {
+      "path": "includes/rating-plugin/inc/options.php",
+      "url": "1.3.26/includes/rating-plugin/inc/options.php",
+      "hash": "c21d6262d49df63a84810d86e327cf08b83f1deefd5092060634838e560cdf43"
+    },
+    {
+      "path": "includes/rating-plugin/inc/widget.php",
+      "url": "1.3.26/includes/rating-plugin/inc/widget.php",
+      "hash": "2f598daef92d5dbe2c0efc568d3129881a7658718dcac30b6848a41432549240"
+    },
+    {
+      "path": "includes/rating-plugin/zibll-rating-plugin.php",
+      "url": "1.3.26/includes/rating-plugin/zibll-rating-plugin.php",
+      "hash": "2c89c462f587c3fabffdebde72068f99dbe65b0e55fcb223f1f3d903c843eb91"
+    },
+    {
+      "path": "includes/xiazhi-qz-loader.php",
+      "url": "1.3.26/includes/xiazhi-qz-loader.php",
+      "hash": "f3bb745c6894f9ea821a834d03976c2bea8150c3825f406cc39883f8c900c3aa"
+    },
+    {
+      "path": "includes/xiazhi-qz/assets/css/main.min.css",
+      "url": "1.3.26/includes/xiazhi-qz/assets/css/main.min.css",
+      "hash": "c35f645eaa35b0b523504ac4a7cfd78d35e3fc96c02f8b1c00c9e500a242b3dc"
+    },
+    {
+      "path": "includes/xiazhi-qz/assets/img/baiyibutie.webp",
+      "url": "1.3.26/includes/xiazhi-qz/assets/img/baiyibutie.webp",
+      "hash": "5a4363b7c03c7a1c24d15a08701bb6d8e0783cdb249a5bbf2229e4f3284ed845"
+    },
+    {
+      "path": "includes/xiazhi-qz/assets/img/dujia.webp",
+      "url": "1.3.26/includes/xiazhi-qz/assets/img/dujia.webp",
+      "hash": "0ca26bf92d5e676d3625981043534ca98a3ae054a939738f709fcd0423bd841d"
+    },
+    {
+      "path": "includes/xiazhi-qz/assets/img/miaosha.webp",
+      "url": "1.3.26/includes/xiazhi-qz/assets/img/miaosha.webp",
+      "hash": "a3b7fa35af621a585a7ba820678e7468ec83d315a8c89baa74df48d476839892"
+    },
+    {
+      "path": "includes/xiazhi-qz/assets/img/shice.webp",
+      "url": "1.3.26/includes/xiazhi-qz/assets/img/shice.webp",
+      "hash": "1119504b386926a21486faf8bf594b0273e2b486ee542c7027e39d73fd6e9f7e"
+    },
+    {
+      "path": "includes/xiazhi-qz/assets/img/shoufa.webp",
+      "url": "1.3.26/includes/xiazhi-qz/assets/img/shoufa.webp",
+      "hash": "6ec918e9d2988535d70c6a2757da35a2907a4186cf05242a4665d7e4ba1cd0dc"
+    },
+    {
+      "path": "includes/xiazhi-qz/assets/img/temai.webp",
+      "url": "1.3.26/includes/xiazhi-qz/assets/img/temai.webp",
+      "hash": "ea5f9c0c778ffe1bf929323d3479206473c9b43c2882dcb98d055a62d10995ba"
+    },
+    {
+      "path": "includes/xiazhi-qz/assets/js/main.min.js",
+      "url": "1.3.26/includes/xiazhi-qz/assets/js/main.min.js",
+      "hash": "59fb6b7d73694ec9805a6b36ce357ccce19fa1f1bc3fcd88ba319f82e1761f01"
+    },
+    {
+      "path": "includes/xiazhi-qz/inc/functions.php",
+      "url": "1.3.26/includes/xiazhi-qz/inc/functions.php",
+      "hash": "6c4bec38ee95a6ff6c6934c7bbe7009f50fc3264ef9ef0315cabd31afaafd148"
+    },
+    {
+      "path": "includes/xiazhi-qz/inc/options.php",
+      "url": "1.3.26/includes/xiazhi-qz/inc/options.php",
+      "hash": "dc49380317c43b4adb54af94cfd678c5e101ddae80f8cb0f4eeae636323d5f97"
+    },
+    {
+      "path": "includes/xiazhi-qz/inc/widget.php",
+      "url": "1.3.26/includes/xiazhi-qz/inc/widget.php",
+      "hash": "da84a9c5a9a651c2f05aeafe2719a1aeaf0b8011128a546fef81368aab50dd72"
+    },
+    {
+      "path": "includes/xiazhi-qz/uninstall.php",
+      "url": "1.3.26/includes/xiazhi-qz/uninstall.php",
+      "hash": "7a1e04ebf20656ad19e550e13b7ca39eed1840378ee17248b5c5632e0dc5cf1c"
+    },
+    {
+      "path": "includes/xiazhi-qz/xiazhi_qz.php",
+      "url": "1.3.26/includes/xiazhi-qz/xiazhi_qz.php",
+      "hash": "e6e1183cc98f66cf1d802b7a256f83a467a5fb355ebebe1e5e37756a7fae0257"
+    },
+    {
+      "path": "includes/zibll-comment-emoji-loader.php",
+      "url": "1.3.26/includes/zibll-comment-emoji-loader.php",
+      "hash": "70fd5de297f70be0fe3edcf02a39ffc3abfaddf03cd480e1712128b3f4b8325c"
+    },
+    {
+      "path": "includes/zibll-comment-emoji/assets/css/admin.css",
+      "url": "1.3.26/includes/zibll-comment-emoji/assets/css/admin.css",
+      "hash": "0890e273cdbeb004b2f645a8cdd8a14a2a36df0b7b8bffa9cb1b910122a4b1c0"
+    },
+    {
+      "path": "includes/zibll-comment-emoji/assets/css/main.css",
+      "url": "1.3.26/includes/zibll-comment-emoji/assets/css/main.css",
+      "hash": "e10d2cd70393affbce22590f287606c9e9e32115fcdea5566b8d667b18e5a0d1"
+    },
+    {
+      "path": "includes/zibll-comment-emoji/assets/js/admin.js",
+      "url": "1.3.26/includes/zibll-comment-emoji/assets/js/admin.js",
+      "hash": "b297fe41ccf2bf9a1fca70a0feaf3b4ed0d51deefdf7897a6b8f689fdeef3828"
+    },
+    {
+      "path": "includes/zibll-comment-emoji/assets/js/main.js",
+      "url": "1.3.26/includes/zibll-comment-emoji/assets/js/main.js",
+      "hash": "fe479b9d6d49d255716c0fa52373f31277ac47b046b2abd0640eb2207f439481"
+    },
+    {
+      "path": "includes/zibll-comment-emoji/inc/functions.php",
+      "url": "1.3.26/includes/zibll-comment-emoji/inc/functions.php",
+      "hash": "6b4244221d6443d161364754b08be3f10fa0807b73da496d8181575fb8e289b6"
+    },
+    {
+      "path": "includes/zibll-comment-emoji/inc/options.php",
+      "url": "1.3.26/includes/zibll-comment-emoji/inc/options.php",
+      "hash": "346c75260c544381a4504817f77d0919cb71b55a02df678ed1244a04ecea5e3a"
+    },
+    {
+      "path": "includes/zibll-comment-emoji/zibll-comment-emoji.php",
+      "url": "1.3.26/includes/zibll-comment-emoji/zibll-comment-emoji.php",
+      "hash": "bb8706a12e775728f52ff43668d44b22fd1b2e2ac35df6e74dc943ea819e8ee6"
+    },
+    {
+      "path": "js/console-filter.js",
+      "url": "1.3.26/js/console-filter.js",
+      "hash": "582b74e4040748a13ad8ba8435467ae6fbabba0120c4ad999cefb345cacdaa7e"
+    },
+    {
+      "path": "screenshot.jpg",
+      "url": "1.3.26/screenshot.jpg",
+      "hash": "e98c75f3fc1b0363a289dfb69fb16f3123f2a4595257fd70cdfd530cdaa0a954"
+    }
+  ]
+}

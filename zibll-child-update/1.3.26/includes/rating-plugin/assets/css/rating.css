@@ -1,0 +1,196 @@
+/**
+ * Zibll 文章评分插件 - 前端样式
+ * 评分排行小工具样式由子比主题 .zib-widget.hot-posts 原生覆盖，无需额外定义
+ */
+
+/* ========== 评分组件容器 ========== */
+.zrp-rating-box {
+    position: relative;
+    border-radius: var(--main-radius, 8px);
+    box-shadow: var(--main-shadow, 0 1px 3px rgba(0,0,0,.05));
+}
+
+/* 侧边栏模式 */
+.zrp-rating-box.zrp-mode-sidebar {
+    margin: 20px 0;
+    padding: 20px;
+    text-align: center;
+}
+
+/* 悬浮窗模式 */
+.zrp-rating-box.zrp-mode-float {
+    position: fixed;
+    right: 20px;
+    bottom: 80px;  /* 默认距底距离，可通过后台设置覆盖 */
+    z-index: 99;
+    padding: 16px;
+    width: 220px;
+}
+
+/* ========== 评分头部 ========== */
+.zrp-rating-header {
+    margin-bottom: 10px;
+}
+
+/* ========== 星级交互区 ========== */
+.zrp-stars {
+    display: inline-flex;
+    gap: 4px;
+    cursor: pointer;
+    user-select: none;
+    direction: ltr;
+    font-size: 24px;
+}
+
+.zrp-star {
+    position: relative;
+    display: inline-block;
+    color: var(--muted-3-color, #b1b1b1);
+    transition: color .15s, transform .15s;
+}
+
+.zrp-star .fa-star {
+    display: none;
+}
+
+.zrp-star .fa-star-o {
+    display: inline;
+}
+
+/* 激活状态 */
+.zrp-star.active .fa-star-o {
+    display: none;
+}
+
+.zrp-star.active .fa-star {
+    display: inline;
+    color: var(--theme-color, #f1404b);
+}
+
+/* hover 预览 */
+.zrp-star.hover .fa-star-o {
+    display: none;
+}
+
+.zrp-star.hover .fa-star {
+    display: inline;
+    color: var(--theme-color, #f1404b);
+}
+
+/* 自定义激活颜色 */
+.zrp-star.active .fa-star,
+.zrp-star.hover .fa-star {
+    color: var(--zrp-star-color, var(--theme-color, #f1404b));
+}
+
+/* 点击效果 */
+.zrp-star:active {
+    transform: scale(1.2);
+}
+
+/* ========== 评分信息区 ========== */
+.zrp-rating-score-value {
+    font-size: 1.6em;
+}
+
+/* ========== 显示模式星级（无交互） ========== */
+.zrp-stars-display {
+    display: inline-flex;
+    gap: 2px;
+    font-size: 14px;
+    color: var(--muted-3-color, #b1b1b1);
+}
+
+.zrp-stars-display .zrp-star-display.active {
+    color: var(--theme-color, #f1404b);
+}
+
+.zrp-stars-display .zrp-star-display.half {
+    position: relative;
+    color: var(--muted-3-color, #b1b1b1);
+}
+
+.zrp-stars-display .zrp-star-display.half::after {
+    content: '\f005';
+    font-family: FontAwesome;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 50%;
+    overflow: hidden;
+    color: var(--theme-color, #f1404b);
+}
+
+/* ========== 暗色模式 ========== */
+body.dark-theme .zrp-rating-box {
+    background: var(--main-bg-color);
+}
+
+/* ========== 响应式 ========== */
+@media (max-width: 768px) {
+    .zrp-rating-box.zrp-mode-float {
+        right: 10px;
+        width: auto;
+        max-width: 180px;
+        padding: 12px 14px;
+        max-height: 60vh;
+        overflow-y: auto;
+    }
+
+    .zrp-stars {
+        font-size: 22px;
+    }
+}
+
+/* 评分排行首图卡片：默认 60% 适合侧边栏，宽容器压成 30% 横幅，避免盖满页面 */
+.zrp-rank-hero {
+    padding-bottom: 60% !important;
+}
+.zrp-rating-rank.zrp-rank-wide .zrp-rank-hero {
+    padding-bottom: 30% !important;
+}
+
+/* 移动端：宽容器里也改成 40%，比 30% 略高，竖屏观感更舒展 */
+@media (max-width: 768px) {
+    .zrp-rating-rank.zrp-rank-wide .zrp-rank-hero {
+        padding-bottom: 40% !important;
+    }
+}
+
+/* ========== 评分排行小工具：页面插入自适应（兼容正文内容区 / 全宽区） ========== */
+/* 去掉 size=>'mini' 后，子比主题不再对页面内容区弹「不推荐放置在此位置」提示。
+   此处依据 zrp_rating_rank_posts() 输出的容器 class 做自适应布局。 */
+
+/* 窄容器（侧边栏 / 移动菜单）：保持原横向单行堆叠，间距沿用 .mt15 */
+.zrp-rating-rank.zrp-rank-narrow .zrp-rank-list {
+    margin-top: 0;
+}
+
+/* 宽容器（页面内容区 page_*_content 等）：2 列网格，填满空间更好看 */
+.zrp-rating-rank.zrp-rank-wide .zrp-rank-list {
+    margin-top: 15px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+.zrp-rating-rank.zrp-rank-wide .zrp-rank-list > .flex {
+    margin-top: 0; /* 网格间距改由 gap 控制，去掉原 mt15 以免叠加 */
+}
+
+/* 全宽容器（*_fluid）：PC 端升到 3 列 */
+@media (min-width: 992px) {
+    .zrp-rating-rank.zrp-rank-wide.zrp-rank-fluid .zrp-rank-list {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+/* 移动端：单列，列表项恢复自然上下间距 */
+@media (max-width: 768px) {
+    .zrp-rating-rank.zrp-rank-wide .zrp-rank-list {
+        grid-template-columns: 1fr;
+        margin-top: 0;
+    }
+    .zrp-rating-rank.zrp-rank-wide .zrp-rank-list > .flex {
+        margin-top: 15px;
+    }
+}

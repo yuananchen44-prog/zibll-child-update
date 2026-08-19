@@ -1,0 +1,225 @@
+.zibll-emoji-admin-uploader {
+    padding: 12px 0;
+}
+
+.zibll-emoji-admin-row {
+    margin: 10px 0;
+}
+
+.zibll-emoji-admin-row label {
+    display: block;
+    margin-bottom: 6px;
+    color: #444;
+}
+
+.zibll-emoji-admin-result {
+    margin-top: 8px;
+    min-height: 24px;
+    line-height: 1.7;
+}
+
+.zibll-emoji-admin-result.is-error {
+    color: #d93025;
+}
+
+.zibll-emoji-admin-result.is-success {
+    color: #198754;
+}
+
+.zibll-emoji-admin-group-list {
+    list-style: disc;
+    margin: 8px 0 0 18px;
+}
+
+.zibll-emoji-sort-manager {
+    max-width: 980px;
+    padding: 8px 0;
+}
+
+.zibll-emoji-sort-groups {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 18px;
+    padding: 0;
+    list-style: none;
+}
+
+.zibll-emoji-sort-group {
+    margin: 0;
+}
+
+.zibll-emoji-sort-group-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 38px;
+    padding: 5px 10px 5px 7px;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    background: #fff;
+    color: #2c3338;
+    cursor: pointer;
+}
+
+.zibll-emoji-sort-group-button:hover,
+.zibll-emoji-sort-group.is-active .zibll-emoji-sort-group-button {
+    border-color: #2271b1;
+    color: #135e96;
+}
+
+.zibll-emoji-sort-group.is-active .zibll-emoji-sort-group-button {
+    background: #f0f6fc;
+    box-shadow: 0 0 0 1px #2271b1;
+}
+
+.zibll-emoji-sort-group-handle,
+.zibll-emoji-sort-item-handle {
+    color: #787c82;
+    cursor: move;
+}
+
+.zibll-emoji-sort-group-count {
+    min-width: 20px;
+    padding: 1px 5px;
+    border-radius: 10px;
+    background: #f0f0f1;
+    color: #646970;
+    font-size: 11px;
+    line-height: 18px;
+    text-align: center;
+}
+
+.zibll-emoji-sort-heading {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.zibll-emoji-sort-current-title {
+    font-size: 14px;
+}
+
+.zibll-emoji-sort-count {
+    color: #646970;
+    font-size: 12px;
+}
+
+.zibll-emoji-sort-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(82px, 1fr));
+    gap: 8px;
+    max-height: min(65vh, 680px);
+    min-height: 108px;
+    padding: 10px;
+    overflow: auto;
+    border: 1px solid #dcdcde;
+    background: #f6f7f7;
+}
+
+.zibll-emoji-sort-item,
+.zibll-emoji-sort-item-placeholder {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    height: 102px;
+    margin: 0;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+    background: #fff;
+}
+
+.zibll-emoji-sort-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 9px 6px 6px;
+}
+
+.zibll-emoji-sort-item:hover {
+    border-color: #8c8f94;
+}
+
+.zibll-emoji-sort-item img {
+    display: block;
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+}
+
+.zibll-emoji-sort-item-handle {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 20px;
+    height: 20px;
+    font-size: 17px;
+    line-height: 20px;
+    text-align: center;
+}
+
+.zibll-emoji-sort-item-name {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    color: #50575e;
+    font-size: 11px;
+    line-height: 16px;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.zibll-emoji-sort-item-placeholder,
+.zibll-emoji-sort-group-placeholder {
+    border: 1px dashed #2271b1;
+    background: #f0f6fc;
+}
+
+.zibll-emoji-sort-group-placeholder {
+    width: 110px;
+    height: 38px;
+    margin: 0;
+    border-radius: 4px;
+}
+
+.zibll-emoji-sort-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.zibll-emoji-sort-status {
+    margin-left: auto;
+    color: #646970;
+}
+
+.zibll-emoji-sort-status.is-error {
+    color: #d63638;
+}
+
+.zibll-emoji-sort-actions .spinner {
+    float: none;
+    margin: 0;
+}
+
+@media (max-width: 782px) {
+    .zibll-emoji-sort-items {
+        grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+    }
+
+    .zibll-emoji-sort-actions {
+        flex-wrap: wrap;
+    }
+
+    .zibll-emoji-sort-status {
+        width: 100%;
+        margin-left: 0;
+        order: -1;
+    }
+}
