@@ -102,6 +102,37 @@ if (!function_exists('zibll_child_update_base_plain')) {
         return 'https://download.achen-mcsever.top/zibll-child-update';
     }
 }
+
+// ─── 第二下载源：GitHub 公开镜像（双源并存，版本较新者优先） ──────────────
+// 作用：与主源 download.achen-mcsever.top 并存，谁先发版（版本号较新）用户就从谁更新，互为冗余。
+// 约定 / 注意：
+//   1) 镜像为【公开仓库】：任何人（含分发出去的用户站）无需令牌即可从 raw.githubusercontent.com 拉取更新。
+//      代价：子主题源代码随之公开。如日后改回私有，填下方 ZIBLL_CHILD_GITHUB_TOKEN 即自动切回带鉴权地址。
+//   2) 仓库内目录结构须与宝塔源一致：根下 zibll-child-update/update.json + zibll-child-update/<VERSION>/...
+//   3) 发布时序铁律对双源同样适用：任一版本发布时须等【宝塔 + GitHub 两处】都传完，再让用户点更新，否则另一源回退时会 404。
+if (!defined('ZIBLL_CHILD_GITHUB_REPO')) {
+    define('ZIBLL_CHILD_GITHUB_REPO', 'yuananchen44-prog/zibll-child-update'); // 私有镜像仓库 owner/repo（请自建并改成你的）
+}
+if (!defined('ZIBLL_CHILD_GITHUB_REF')) {
+    define('ZIBLL_CHILD_GITHUB_REF', 'main'); // 分支或标签（也可用 v1.3.26 这类标签固定）
+}
+// GitHub 访问令牌（可选）。公开仓库下拉取更新【无需令牌】；仅当把仓库改回私有时才需填（Personal Access Token，repo 读取权限）。
+// 建议放 wp-config.php：define('ZIBLL_CHILD_GITHUB_TOKEN', 'ghp_xxx'); 留空 = 公开、无鉴权。
+if (!defined('ZIBLL_CHILD_GITHUB_TOKEN')) {
+    define('ZIBLL_CHILD_GITHUB_TOKEN', ''); // 公开仓库留空即可
+}
+// 公开仓库：直接走 raw.githubusercontent.com，不带令牌也能拉（任何人可读）。
+// 若填了令牌（私有场景），会自动以 basic-auth 形式嵌入 URL；令牌不出现在前台，报错日志只记录 HTTP 状态码与 curl 错误。
+if (!defined('ZIBLL_CHILD_UPDATE_GITHUB_BASE')) {
+    $gh_token = ZIBLL_CHILD_GITHUB_TOKEN !== '' ? (ZIBLL_CHILD_GITHUB_TOKEN . '@') : '';
+    define(
+        'ZIBLL_CHILD_UPDATE_GITHUB_BASE',
+        'https://' . $gh_token . 'raw.githubusercontent.com/' . ZIBLL_CHILD_GITHUB_REPO . '/' . ZIBLL_CHILD_GITHUB_REF . '/zibll-child-update'
+    );
+}
+if (!defined('ZIBLL_CHILD_UPDATE_API_GITHUB')) {
+    define('ZIBLL_CHILD_UPDATE_API_GITHUB', rtrim(ZIBLL_CHILD_UPDATE_GITHUB_BASE, '/') . '/update.json');
+}
 // 单文件下载（双协议兜底）：先 WP HTTP（放宽 sslverify 兼容证书不全的主机），
 // 失败再用 cURL 直连兜底。返回 array(内容字符串|false, 错误描述)。
 if (!function_exists('zibll_child_fetch_url')) {
@@ -163,7 +194,9 @@ function zibll_child_get_version()
     return $v;
 }
 
-/* ── 拉取远程 metadata（带 1 小时缓存，失败返回 false） ── */
+/* ── 拉取远程 metadata（带 1 小时缓存，失败返回 false） ──
+ * 双源并存：同时探测主源（宝塔）与 GitHub 镜像，取【版本号较新】的一方作为更新依据
+ * （版本相同则优先主源）。哪边先发版，用户就先从哪边更新。 */
 function zibll_child_fetch_update_meta()
 {
     $cache = get_transient('zibll_child_update_meta');
@@ -171,7 +204,39 @@ function zibll_child_fetch_update_meta()
         return $cache;
     }
 
-    $resp = wp_remote_get(ZIBLL_CHILD_UPDATE_API, array(
+    $primary = zibll_child_fetch_update_meta_from(ZIBLL_CHILD_UPDATE_API);
+    $github  = zibll_child_fetch_update_meta_from(ZIBLL_CHILD_UPDATE_API_GITHUB);
+
+    $meta = false;
+    if ($primary && $github) {
+        // 两源都可用：较新者胜出；打标 _source 供逐文件下载沿用同一源
+        if (version_compare($github['version'], $primary['version'], '>')) {
+            $github['_source'] = 'github';
+            $meta = $github;
+        } else {
+            $primary['_source'] = 'plain';
+            $meta = $primary;
+        }
+    } elseif ($primary) {
+        $primary['_source'] = 'plain';
+        $meta = $primary;
+    } elseif ($github) {
+        $github['_source'] = 'github';
+        $meta = $github;
+    }
+
+    if (!$meta) {
+        return false;
+    }
+
+    set_transient('zibll_child_update_meta', $meta, HOUR_IN_SECONDS);
+    return $meta;
+}
+
+/* 从指定 update.json 地址拉取并校验元数据（不缓存）；成功返回数组，失败返回 false */
+function zibll_child_fetch_update_meta_from($url)
+{
+    $resp = wp_remote_get($url, array(
         'timeout'  => 15,
         'sslverify' => false,
     ));
@@ -184,7 +249,6 @@ function zibll_child_fetch_update_meta()
         return false;
     }
 
-    set_transient('zibll_child_update_meta', $data, HOUR_IN_SECONDS);
     return $data;
 }
 
@@ -335,9 +399,16 @@ function zibll_child_do_incremental_update()
                 continue;
             }
         } else {
-            $candidate_bases = array(
-                'plain' => zibll_child_update_base_plain(),  // 明文下载源（主，已关闭混淆）
-            );
+            // 沿用「版本较新」胜出源的下载地址优先；另一源作单文件失败时的兜底（同源同版本内容一致，安全）
+            $winner = isset($meta['_source']) ? $meta['_source'] : 'plain';
+            $candidate_bases = array();
+            if ($winner === 'github') {
+                $candidate_bases['github'] = ZIBLL_CHILD_UPDATE_GITHUB_BASE;
+                $candidate_bases['plain']  = zibll_child_update_base_plain();
+            } else {
+                $candidate_bases['plain']  = zibll_child_update_base_plain();
+                $candidate_bases['github'] = ZIBLL_CHILD_UPDATE_GITHUB_BASE;
+            }
             $fetch_errs = array();
             foreach ($candidate_bases as $chan => $base) {
                 $try_url = rtrim($base, '/') . '/' . ltrim($f['url'], '/');
